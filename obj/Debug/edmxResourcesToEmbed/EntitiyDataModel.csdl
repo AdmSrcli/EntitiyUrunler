@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DbEntityUrunModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="TblKategori">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AD" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="TblUrun" Relationship="Self.FK_TblUrun_TblKategori" FromRole="TblKategori" ToRole="TblUrun" />
+  </EntityType>
+  <EntityType Name="TblMusteri">
+    <Key>
+      <PropertyRef Name="MusteriId" />
+    </Key>
+    <Property Name="MusteriId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MusteriAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="MusteriSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Sehir" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="TblSatis" Relationship="Self.FK_TblSatis_TblMusteri" FromRole="TblMusteri" ToRole="TblSatis" />
+    <Property Name="Durum" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="TblSatis">
+    <Key>
+      <PropertyRef Name="SatısId" />
+    </Key>
+    <Property Name="SatısId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UrunId" Type="Int32" />
+    <Property Name="MusteriId" Type="Int32" />
+    <Property Name="Fiyat" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Tarih" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="TblMusteri" Relationship="Self.FK_TblSatis_TblMusteri" FromRole="TblSatis" ToRole="TblMusteri" />
+    <NavigationProperty Name="TblUrun" Relationship="Self.FK_TblSatis_TblUrun" FromRole="TblSatis" ToRole="TblUrun" />
+  </EntityType>
+  <EntityType Name="TblUrun">
+    <Key>
+      <PropertyRef Name="UrunId" />
+    </Key>
+    <Property Name="UrunId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UrunAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Marka" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Stok" Type="Int32" />
+    <Property Name="Fiyat" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Durum" Type="Boolean" />
+    <Property Name="KategoriId" Type="Int32" />
+    <NavigationProperty Name="TblKategori" Relationship="Self.FK_TblUrun_TblKategori" FromRole="TblUrun" ToRole="TblKategori" />
+    <NavigationProperty Name="TblSatis" Relationship="Self.FK_TblSatis_TblUrun" FromRole="TblUrun" ToRole="TblSatis" />
+  </EntityType>
+  <Association Name="FK_TblUrun_TblKategori">
+    <End Role="TblKategori" Type="Self.TblKategori" Multiplicity="0..1" />
+    <End Role="TblUrun" Type="Self.TblUrun" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblKategori">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TblUrun">
+        <PropertyRef Name="KategoriId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TblSatis_TblMusteri">
+    <End Role="TblMusteri" Type="Self.TblMusteri" Multiplicity="0..1" />
+    <End Role="TblSatis" Type="Self.TblSatis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblMusteri">
+        <PropertyRef Name="MusteriId" />
+      </Principal>
+      <Dependent Role="TblSatis">
+        <PropertyRef Name="MusteriId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TblSatis_TblUrun">
+    <End Role="TblUrun" Type="Self.TblUrun" Multiplicity="0..1" />
+    <End Role="TblSatis" Type="Self.TblSatis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblUrun">
+        <PropertyRef Name="UrunId" />
+      </Principal>
+      <Dependent Role="TblSatis">
+        <PropertyRef Name="UrunId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DbEntityUrunEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TblKategori" EntityType="Self.TblKategori" />
+    <EntitySet Name="TblMusteri" EntityType="Self.TblMusteri" />
+    <EntitySet Name="TblSatis" EntityType="Self.TblSatis" />
+    <EntitySet Name="TblUrun" EntityType="Self.TblUrun" />
+    <AssociationSet Name="FK_TblUrun_TblKategori" Association="Self.FK_TblUrun_TblKategori">
+      <End Role="TblKategori" EntitySet="TblKategori" />
+      <End Role="TblUrun" EntitySet="TblUrun" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TblSatis_TblMusteri" Association="Self.FK_TblSatis_TblMusteri">
+      <End Role="TblMusteri" EntitySet="TblMusteri" />
+      <End Role="TblSatis" EntitySet="TblSatis" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TblSatis_TblUrun" Association="Self.FK_TblSatis_TblUrun">
+      <End Role="TblUrun" EntitySet="TblUrun" />
+      <End Role="TblSatis" EntitySet="TblSatis" />
+    </AssociationSet>
+    <FunctionImport Name="Markagetir" ReturnType="Collection(String)" />
+    <EntitySet Name="Tbl_Admin" EntityType="DbEntityUrunModel.Tbl_Admin" />
+  </EntityContainer>
+  <EntityType Name="Tbl_Admin">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Kullanici" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Sifre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>
